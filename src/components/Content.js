@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 function Content() {
   const [highscore, setHighscore] = useState(0);
   const [bestScore, setBestScore] = useState(0);
+  const [win, setWin] = useState(false);
   const [cards, setCards] = useState([
     {
       name: "Nao Tomori",
@@ -41,7 +42,7 @@ function Content() {
       source: "Hololive",
       color: "rgb(104, 170, 255)",
       url: "./assets/images/lamy.webp",
-      checked: false,
+      clicked: false,
       id: 4,
     },
     {
@@ -49,7 +50,7 @@ function Content() {
       source: "Nijisanji",
       color: "rgb(83, 194, 111)",
       url: "./assets/images/lulu.jpg",
-      checked: false,
+      clicked: false,
       id: 5,
     },
     {
@@ -57,7 +58,7 @@ function Content() {
       source: "Genshin Impact",
       color: "rgb(233, 91, 91)",
       url: "./assets/images/yoimiya.jpg",
-      checked: false,
+      clicked: false,
       id: 6,
     },
     {
@@ -65,7 +66,7 @@ function Content() {
       source: "Nijisanji",
       color: "rgb(252, 241, 93)",
       url: "./assets/images/rikiichi.png",
-      checked: false,
+      clicked: false,
       id: 7,
     },
     {
@@ -73,7 +74,7 @@ function Content() {
       source: "Honkai Impact",
       color: "rgb(231, 125, 63)",
       url: "./assets/images/kiana.jpg",
-      checked: false,
+      clicked: false,
       id: 8,
     },
     {
@@ -81,14 +82,50 @@ function Content() {
       source: "Genshin Impact",
       url: "./assets/images/ei.jpg",
       color: "rgb(160, 88, 255)",
-      checked: false,
+      clicked: false,
       id: 9,
     },
   ]);
 
-  useEffect(() => {
-    console.log("Component Mounted");
-  });
+  function handleClick(item) {
+    if (item.clicked === false) {
+      let localScore = highscore + 1;
+      setHighscore(highscore + 1);
+
+      if (localScore === 9) {
+        setWin(true);
+      }
+
+      if (localScore > bestScore) {
+        setBestScore(bestScore + 1);
+      }
+
+      setCards((current) =>
+        current.map((obj) => {
+          if (obj.id === item.id) {
+            return { ...obj, clicked: true };
+          }
+
+          return obj;
+        })
+      );
+    } else {
+      setHighscore(0);
+      resetClickedValue();
+    }
+  }
+
+  function resetClickedValue() {
+    setCards((current) =>
+      current.map((obj) => {
+        if (obj.clicked === true) {
+          return { ...obj, clicked: false };
+        }
+
+        return obj;
+      })
+    );
+  }
 
   function cardsFunc() {
     let shuffled = cards
@@ -97,7 +134,7 @@ function Content() {
       .map(({ value }) => value);
     return shuffled.map((item) => {
       return (
-        <div key={item.id}>
+        <div key={item.id} onClick={() => handleClick(item)}>
           <img src={item.url} alt={`${item.name}'s card`}></img>
           <p style={{ color: item.color }}>{item.name}</p>
           <p>{item.source}</p>
@@ -106,13 +143,29 @@ function Content() {
     });
   }
 
+  function setDefault() {
+    setHighscore(0);
+    setBestScore(0);
+    setWin(false);
+    resetClickedValue();
+  }
+
   return (
     <div className="game-content">
       <div className="game-content-highscore">
         <p className="game-score">Score: {highscore}</p>
         <p className="game-best-score">Best: {bestScore}</p>
       </div>
-      <div className="game-content-cards-container">{cardsFunc()}</div>
+      <div className="game-content-cards-container">
+        {win === false ? (
+          cardsFunc()
+        ) : (
+          <div className="win-div">
+            <h1>You Won!</h1>
+            <button onClick={() => setDefault()}>Play Again?</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

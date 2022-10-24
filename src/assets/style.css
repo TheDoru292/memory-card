@@ -39,6 +39,7 @@
 
 .game-content-cards-container {
     margin: 20px;
+    flex-grow: 1;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -89,4 +90,22 @@
     justify-content: center;
     align-items: center;
     height: 40px;
+}
+
+.game-content-cards-container .win-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    height: 100%;
+    background-color: inherit;
+}
+
+.win-div button {
+    cursor: pointer;
+    margin-top: 10px;
+    background-color:rgb(63, 63, 63);
+    padding: 10px;
+    color: rgb(231, 231, 231);
+    border: 1px solid black;
 }
