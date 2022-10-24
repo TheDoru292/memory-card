@@ -86,7 +86,25 @@ function Content() {
     },
   ]);
 
-  useEffect(() => {});
+  useEffect(() => {
+    console.log("Component Mounted");
+  });
+
+  function cardsFunc() {
+    let shuffled = cards
+      .map((value) => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
+    return shuffled.map((item) => {
+      return (
+        <div key={item.id}>
+          <img src={item.url} alt={`${item.name}'s card`}></img>
+          <p style={{ color: item.color }}>{item.name}</p>
+          <p>{item.source}</p>
+        </div>
+      );
+    });
+  }
 
   return (
     <div className="game-content">
@@ -94,17 +112,7 @@ function Content() {
         <p className="game-score">Score: {highscore}</p>
         <p className="game-best-score">Best: {bestScore}</p>
       </div>
-      <div className="game-content-cards-container">
-        {cards.map((item) => {
-          return (
-            <div key={item.id}>
-              <img src={item.url} alt={`${item.name}'s card`}></img>
-              <p style={{ color: item.color }}>{item.name}</p>
-              <p>{item.source}</p>
-            </div>
-          );
-        })}
-      </div>
+      <div className="game-content-cards-container">{cardsFunc()}</div>
     </div>
   );
 }
